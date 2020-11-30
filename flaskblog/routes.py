@@ -1,28 +1,14 @@
-from flask import render_template, url_for, flash, redirect, request
-from flaskblog.forms import RegistrationForm, LoginForm
+from flask import render_template, url_for, flash, redirect, request, abort
+from flaskblog.forms import RegistrationForm, LoginForm, PostForm
 from flaskblog.models import User, Post
 from flaskblog import app, db, bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
-
-posts = [
-  {
-    "author": 'Liya',
-    "title": 'First post',
-    "content": "first content",
-    "date posted": "april 1 2018"
-  },
-  {
-    "author": 'josi',
-    "title": '2nd post',
-    "content": "2nd content",
-    "date posted": "april 5 2018"
-  }
-]
 
 
 @app.route("/")
 @app.route("/home")
 def home():
+  posts = Post.query.all() #get all posts
   return render_template('home.html', posts=posts)
 
 @app.route("/about")
@@ -73,3 +59,50 @@ def logout():
 @login_required
 def account():
   return render_template('account.html', title='Account')
+
+#create a new post
+@app.route("/post/new", methods=['GET', 'POST'])
+@login_required
+def new_post():
+  form = PostForm()
+  if form.validate_on_submit():
+    #create a post instance
+    post = Post(title=form.title.data, content=form.content.data, author=current_user)
+    #add and save to db
+    db.session.add(post)
+    db.session.commit()
+
+    flash('Your post has been created!', 'success')
+    return redirect(url_for('home'))
+  return render_template('create_post.html', title='New Post', 
+                        form=form, legend='New Post')
+
+#display a single post
+@app.route("/post/<int:post_id>")
+def post(post_id):
+  post = Post.query.get_or_404(post_id)
+  return render_template('post.html', title=post.title, post=post)
+
+#update a post
+@app.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
+@login_required
+def update_post(post_id):
+  post = Post.query.get_or_404(post_id)
+  if post.author != current_user:
+    abort(403) #return an error 'forbidden route'
+  form = PostForm() #else get the post form
+
+  #post request
+  if form.validate_on_submit():
+    post.title = form.title.data
+    post.content = form.content.data
+    db.session.commit() #commit your change
+    flash('Your post has been updated', 'success')
+    return redirect(url_for('post', post_id=post.id))
+  #get request
+  elif request.method == 'GET': 
+    #populate form with title and content
+    form.title.data = post.title 
+    form.content.data = post.content
+  return render_template('create_post.html', title='Update Post', 
+                        form=form, legend='Update Post')
