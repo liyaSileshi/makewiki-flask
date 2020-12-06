@@ -34,3 +34,14 @@ export FLASK_APP=makewiki
 export FLASK_DEBUG=1
 flask run
 ```
+
+# For the 'forgot password' feature:
+1. Create a ```.env``` file in your main directory
+1. enter your credentials in the ```.env``` file
+```
+EMAIL_USER=myemail@gmail.com
+EMAIL_PASS=my secret password
+```
+1. You might have to turn on 'less secure app access' for the email you put in the ```.env``` file. 
+
+[Read more here](https://support.google.com/accounts/answer/6010255?authuser=2&p=lsa_blocked&hl=en&authuser=2&visit_id=637428262880099931-3692899904&rd=1)
