@@ -30,7 +30,7 @@
               <span>{{ error }}</span>
             {% endfor %}
           </div>
-        {% else %}password
+        {% else %}
             {{ form.email(class="form-control form-control-lg")}}
         {% endif %}
       </div>
@@ -73,5 +73,4 @@
     Already Have An Account? <a class="ml-2" href="{{ url_for('login')}}"> Sign In </a>
   </small>
 </div>
-  <h1>About page</h1>
 {% endblock content %}

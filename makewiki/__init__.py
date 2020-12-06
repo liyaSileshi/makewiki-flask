@@ -12,4 +12,4 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'login' #function name of the login route, redirects user to this page if not authenticated
 login_manager.login_message_category = 'info' #bootstrap class for alert login
 
-from flaskblog import routes
+from makewiki import routes

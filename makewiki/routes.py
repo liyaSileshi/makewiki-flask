@@ -1,7 +1,7 @@
 from flask import render_template, url_for, flash, redirect, request, abort
-from flaskblog.forms import RegistrationForm, LoginForm, PostForm
-from flaskblog.models import User, Post
-from flaskblog import app, db, bcrypt
+from makewiki.forms import RegistrationForm, LoginForm, PostForm
+from makewiki.models import User, Post
+from makewiki import app, db, bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
 
 
